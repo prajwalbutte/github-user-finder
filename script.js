@@ -19,3 +19,13 @@ const companyContainer = document.getElementById("company-container");
 const blogContainer = document.getElementById("blog-container");
 const twitterContainer = document.getElementById("twitter-container");
 const reposContainer = document.getElementById("repos-container");
+
+searchBtn.addEventListener("click",searchUser)
+searchInput.addEventListener("keypress",(e)=>{
+    if(e.key ==="Enter") searchUser();
+})
+
+async function searchUser(){
+    const username = searchInput.value.trim();
+    if(!username) return alert("Please enter a username!");
+}
