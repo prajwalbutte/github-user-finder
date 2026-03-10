@@ -28,4 +28,19 @@ searchInput.addEventListener("keypress",(e)=>{
 async function searchUser(){
     const username = searchInput.value.trim();
     if(!username) return alert("Please enter a username!");
+
+
+     try {
+     // reset ui
+     profileContainer.classList.add("hidden");
+     errorContainer.classList.add("hidden");
+     // api of github
+     const response = await fetch(`https://api.github.com/users/${username}`)
+     if(!response.ok) throw new Error("User not found");
+
+    const userData = await response.json();
+    console.log("User data is here",userData)
+}  catch (error) {
+    
+}
 }
