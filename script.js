@@ -2,7 +2,7 @@ const searchInput = document.getElementById("search");
 const searchBtn = document.getElementById("search-btn");
 const profileContainer = document.getElementById("profile-container");
 const errorContainer = document.getElementById("error-container");
-const avatar = document.getElementById("prof-img");
+const avatar = document.getElementById("avatar");
 const nameElement = document.getElementById("name");
 const usernameElement = document.getElementById("username");
 const bioElement = document.getElementById("bio");
@@ -20,27 +20,39 @@ const blogContainer = document.getElementById("blog-container");
 const twitterContainer = document.getElementById("twitter-container");
 const reposContainer = document.getElementById("repos-container");
 
-searchBtn.addEventListener("click",searchUser)
-searchInput.addEventListener("keypress",(e)=>{
-    if(e.key ==="Enter") searchUser();
-})
+searchBtn.addEventListener("click", searchUser);
+searchInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") searchUser();
+});
 
-async function searchUser(){
-    const username = searchInput.value.trim();
-    if(!username) return alert("Please enter a username!");
+async function searchUser() {
+  const username = searchInput.value.trim();
 
+  if (!username) return alert("Please enter a username");
 
-     try {
-     // reset ui
-     profileContainer.classList.add("hidden");
-     errorContainer.classList.add("hidden");
-     // api of github
-     const response = await fetch(`https://api.github.com/users/${username}`)
-     if(!response.ok) throw new Error("User not found");
+  try {
+    // reset the ui
+    profileContainer.classList.add("hidden");
+    errorContainer.classList.add("hidden");
+
+    // https://api.github.com/users/burakorkmez
+    const response = await fetch(`https://api.github.com/users/${username}`);
+    if (!response.ok) throw new Error("User not found");
 
     const userData = await response.json();
-    console.log("User data is here",userData)
-}  catch (error) {
-    
+    console.log("user data is here", userData);
+
+    displayUserData(userData);
+
+    fetchRepositories(userData.repos_url);
+  } catch (error) {
+    showError();
+  }
 }
+
+
+
+function showError() {
+  errorContainer.classList.remove("hidden");
+  profileContainer.classList.add("hidden");
 }
