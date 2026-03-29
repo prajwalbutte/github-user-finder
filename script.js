@@ -28,10 +28,13 @@ searchInput.addEventListener("keypress", (e) => {
 async function searchUser() {
   const username = searchInput.value.trim();
 
-  if (!username) return alert("Please enter a username");
+  if (!username) {
+    alert("Please enter a username");
+    return;
+  }
 
   try {
-    // reset the ui
+    
     profileContainer.classList.add("hidden");
     errorContainer.classList.add("hidden");
 
@@ -54,7 +57,10 @@ async function fetchRepositories(reposUrl) {
   reposContainer.innerHTML = '<div class="loading-repos">Loading repositories...</div>';
 
   try {
-    const response = await fetch(reposUrl + "?per_page=6");
+    // Added sort=updated so it actually fetches "Latest" instead of alphabetical
+    const response = await fetch(reposUrl + "?sort=updated&per_page=6");
+    if (!response.ok) throw new Error("Could not fetch repositories");
+    
     const repos = await response.json();
     displayRepos(repos);
   } catch (error) {
@@ -161,5 +167,6 @@ function formatDate(dateString) {
   });
 }
 
-searchInput.value = "";
+// Fetch a default user on load instead of throwing an empty alert
+searchInput.value = "prajwalbutte";
 searchUser();
