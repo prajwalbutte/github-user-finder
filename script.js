@@ -40,6 +40,12 @@ async function searchUser() {
 
    
     const response = await fetch(`https://api.github.com/users/${username}`);
+    
+    if (response.status === 403) {
+      alert("API request limit exceeded! Please try again later.");
+      return;
+    }
+    
     if (!response.ok) throw new Error("User not found");
 
     const userData = await response.json();
@@ -59,6 +65,12 @@ async function fetchRepositories(reposUrl) {
   try {
     // Added sort=updated so it actually fetches "Latest" instead of alphabetical
     const response = await fetch(reposUrl + "?sort=updated&per_page=6");
+
+    if (response.status === 403) {
+      reposContainer.innerHTML = '<div class="no-repos">API request limit exceeded. Cannot load repositories.</div>';
+      return;
+    }
+
     if (!response.ok) throw new Error("Could not fetch repositories");
     
     const repos = await response.json();
